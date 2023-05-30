@@ -1,5 +1,3 @@
-https://www.facebook.com/groups/shumai?fields=feed{comments.limit{200}}
-
 First of all, thank you for watching, I'm learning data analysis in bootcamp, this is my first commercial project with my team members. 
 
 Theme: E-commerce platform analysis
