@@ -1,6 +1,6 @@
 First of all, thank you for watching, I'm learning data analysis in bootcamp, this is my first commercial project with my team members. 
 
-Theme: E-commerce platform analysis. 
+Theme: E-commerce platform analysis
 
 Our analysis market is in Taiwan, so we will analyze momo and pchome. At the same time, we will compare the impact of Shopee merchants and individual sellers, as well as Taobao and tariff policies, on the general customers' choice of purchasing platforms.
 
