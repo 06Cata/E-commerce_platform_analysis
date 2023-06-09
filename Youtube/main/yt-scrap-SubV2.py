@@ -6,7 +6,10 @@ import pandas as pd
 youtube = build('youtube', 'v3', developerKey='AIzaSyBgLALDG3o7gZhxGKlhZicjgtLb8tZ801g')
 
 # Video IDs
-video_ids = ["4CFFqrujxxQ", "RsQOqyp_cRI", "PvtIULOsevg"]
+video_ids = ["ZYiw9BrO8J8", "4qpWzUeV4Rc", "00sgA1rqouI", "HcGkDrDAm08", "GeOJXmhGPcc", 
+             "Tdef7RLS6G8", "t1yPg8nfFMg", "4CFFqrujxxQ", "RsQOqyp_cRI", "PvtIULOsevg", 
+             "ZYiw9BrO8J8", "4qpWzUeV4Rc", "00sgA1rqouI", "HcGkDrDAm08", "GeOJXmhGPcc", 
+             "Tdef7RLS6G8", "t1yPg8nfFMg", "4CFFqrujxxQ", "RsQOqyp_cRI", "PvtIULOsevg"]
 
 # Set the maximum number of videos to scrape (set to None for no limit)
 max_videos = None
