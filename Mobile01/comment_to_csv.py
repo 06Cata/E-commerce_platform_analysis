@@ -2,24 +2,24 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-input_link = "f_pchome"
+input_csv = ""
 
-with open(f"{input_link}.csv", "r", newline="", encoding="utf-8") as csvfile:
+with open(input_csv, "r", newline="", encoding="utf-8") as csvfile:
     reader = csv.reader(csvfile)
-    next(reader)  # 跳过标题行
+    next(reader) 
 
-    with open(f"{input_link}_comment.csv", "w", newline="", encoding="utf-8") as comment_csvfile:
+    with open(f"{input_csv}_comment.csv", "w", newline="", encoding="utf-8") as comment_csvfile:
         writer = csv.writer(comment_csvfile)
         writer.writerow(["url", "text", "timestamp"])
 
         for row in reader:
-            link = row[4]  # 提取链接（link）所在的列
-            page_number = row[5]  # 提取页面编号（page_number）所在的列
+            link = row[4]  # link所在的列
+            page_number = row[5]  # page_number所在的列
             base_url = link 
 
             for suffix in range(1, int(page_number) + 1):
                 url = base_url+ "&p=" + str(suffix)
-                print(url) #檢查
+                print(url) #檢查活動
                 headers = {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
                 }
@@ -32,17 +32,17 @@ with open(f"{input_link}.csv", "r", newline="", encoding="utf-8") as csvfile:
                     if element.find("article"):
                         text = element.get_text()
 
-                        # 查找时间戳所在的父元素
+                        # 找時間所在的父元素
                         timestamp_parent = element.find_next(class_="l-navigation__item")
                         if timestamp_parent:
                             timestamp_element = timestamp_parent.find(class_="o-fNotes o-fSubMini")
                             if timestamp_element:
                                 timestamp = timestamp_element.text.strip()
                             else:
-                                timestamp = "N/A"  # 如果没有找到时间戳元素，则使用默认值 "N/A"
+                                timestamp = "N/A"  
                         else:
-                            timestamp = "N/A"  # 如果没有找到时间戳父元素，则使用默认值 "N/A"
+                            timestamp = "N/A"  
 
-                        # 写入URL、文本和时间戳到CSV文件中
+                        # 寫入URL、內文和時間到CSV
                         writer.writerow([url, text, timestamp])
 

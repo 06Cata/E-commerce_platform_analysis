@@ -3,20 +3,21 @@ import csv
 import json
 import os
 import datetime
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 load_dotenv('C:\dotenv\key.env')
 api_key = os.environ.get('GOOGLE_API_KEY')
 search_engine_id = "a282969c313d24cf6"
-#單一查詢
-query = "pchome"
-num_results_per_page = 10
-total_results = 100
 
-#API正常免費限制為100
+query = "蝦皮"  #Key-words
+num_results_per_page = 10
+total_results = 100 
+
+#API正常免費限制為單日100篇單日10則
 num_pages = total_results // num_results_per_page
 
-# 擷取並儲存資料的列表
+
 results = []
 current_time = datetime.datetime.now()
 timestamp = current_time.strftime("%Y%m%d%H%M")
@@ -39,8 +40,10 @@ for page in range(num_pages):
         # 解析 JSON 回應
         json_file = f"api_{query}_{timestamp}_{start_index}.json"
         data = response.json()
+        #儲存每次的api原始檔，理論上一次會有10支檔案
         with open(fr"{folder_path}\{json_file}", "w",encoding='utf-8') as file:
             json.dump(data,file,ensure_ascii=False)
+            print(f"{json_file} catched") 
         
         # 擷取每筆資料並加入結果列表
         search_terms = data["queries"]["request"][0].get("searchTerms", "")
@@ -49,25 +52,54 @@ for page in range(num_pages):
             title = item.get("title", "")
             article = item["pagemap"]["metatags"][0].get("article:section", "")
             published_time = item["pagemap"]["metatags"][0].get("article:published_time", "")
-            
-            result = {
-                "search_terms": search_terms,
-                "link": link,
-                "title": title,
-                "article": article,
-                "published_time": published_time
+            if "&p=" in link:#確認抓取第一頁
+                link = link[:link.index("&p=")]
+            link_without_page = link.split("&p=")[0]# 分離後綴頁數檢查重複性
+            if any(result["link"].startswith(link_without_page) for result in results):
+                continue
+        # 取得連結完整標題及內文
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
             }
+            response_article = requests.get(link, headers=headers)
+            soup = BeautifulSoup(response_article.content, "html.parser")
+            h1_element = soup.find("h1", class_="t2")
+            article_body_element = soup.find("div", itemprop="articleBody")
+
+            # 確認是否找到標題和內文元素
+            if h1_element is not None and article_body_element is not None:
+                article_body = article_body_element.text.strip()[:300]
+
+                # 新增連結頁數
+                page_elements = soup.find_all("a", attrs={"data-page": True})
+                page_numbers = [int(element["data-page"]) for element in page_elements]
+                if page_numbers:
+                    max_page = max(page_numbers)
+                else:
+                    max_page = 1
+
+                result = {
+                    "published_time": published_time,
+                    "search_terms": search_terms,
+                    "article": article,
+                    "title": title,
+                    "link": link,
+                    "page_number": max_page,
+                    "Body": article_body
+                }
+
+                results.append(result)
+                print(f"record{link}")     
             
-            results.append(result)
-        
-    else:
-        print("發生錯誤:", response.status_code)
-        break
+        else:
+            print("發生錯誤:", response.status_code)
+            break
 
 # 將結果儲存為 CSV 檔案
 if results:
-    with open(f"{query}_OneMobile_{timestamp}.csv", "w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=["published_time","search_terms", "title", "article", "link" ])
+    with open(f"{query}_{timestamp}.csv", "w", newline="", encoding="utf-8") as file:
+        fieldnames = ["published_time", "search_terms", "article", "title", "link", "page_number", "Body"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(results)
         
