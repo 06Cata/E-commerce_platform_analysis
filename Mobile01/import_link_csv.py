@@ -9,7 +9,7 @@ load_dotenv('C:\dotenv\key.env')
 api_key = os.environ.get('GOOGLE_API_KEY')
 search_engine_id = "a282969c313d24cf6"
 #單一查詢
-query = "momo"
+query = "pchome"
 num_results_per_page = 10
 total_results = 100
 
@@ -20,13 +20,16 @@ num_pages = total_results // num_results_per_page
 results = []
 current_time = datetime.datetime.now()
 timestamp = current_time.strftime("%Y%m%d%H%M")
-json_file = f"api_reuqest_{query}_{timestamp}.json"
+current_dir = os.getcwd()  # 獲取當前工作目錄的路徑
+folder_name = f"{query}_{timestamp}api_json"  # 新資料夾的名稱
+folder_path = os.path.join(current_dir, folder_name)
+os.mkdir(folder_path) 
 # 下迴圈進行搜尋結果的取得
 for page in range(num_pages):
     start_index = page * num_results_per_page + 1
     
     # 建立 API 請求的 URL
-    url = f"https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&filter=1&sort=date&q={query}&num={num_results_per_page}&start={start_index}"
+    url = f"https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&filter=1&sort=date&q={query}&num={num_results_per_page}&start={start_index}&siteSearch=mobile01.com/topicdetail.php&siteSearchFilter=i"
     
     # 發送 GET 請求
     response = requests.get(url)
@@ -34,8 +37,9 @@ for page in range(num_pages):
     # 檢查回應狀態碼
     if response.status_code == 200:
         # 解析 JSON 回應
+        json_file = f"api_{query}_{timestamp}_{start_index}.json"
         data = response.json()
-        with open(json_file, "w",encoding='utf-8') as file:
+        with open(fr"{folder_path}\{json_file}", "w",encoding='utf-8') as file:
             json.dump(data,file,ensure_ascii=False)
         
         # 擷取每筆資料並加入結果列表
