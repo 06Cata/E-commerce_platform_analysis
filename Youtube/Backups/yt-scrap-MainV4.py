@@ -3,7 +3,7 @@ from googleapiclient.discovery import build
 import pandas as pd
 
 # Set the YouTube Data API client
-youtube = build('youtube', 'v3', developerKey='AIzaSyBgLALDG3o7gZhxGKlhZicjgtLb8tZ801g')
+youtube = build('youtube', 'v3', developerKey='key')
 
 # Video IDs
 video_ids = ["4CFFqrujxxQ", "RsQOqyp_cRI", "PvtIULOsevg"]
