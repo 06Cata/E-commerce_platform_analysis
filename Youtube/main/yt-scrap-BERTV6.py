@@ -7,9 +7,18 @@ from googletrans import Translator
 import re
 import torch
 
+# Get the current file location
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 # Define the paths
-input_directory = 'C:/Users/cheng/Desktop/VSCodeMain/Workshops/YouTube-Scrapper/src/jjTasks/'
-output_directory = input_directory  # Save the output files in the "jjTasks" folder
+input_directory = os.path.join(current_dir, 'jjTasks')
+output_directory = input_directory
+
+# Check if there are any raw_output_*.csv files
+raw_files = glob.glob(os.path.join(input_directory, 'raw_output_*.csv'))
+if len(raw_files) == 0:
+    print("No raw_output_*.csv files found.")
+    exit()
 
 # Initialize the tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained('nlptown/bert-base-multilingual-uncased-sentiment')
@@ -35,14 +44,8 @@ def translate_with_googletrans(comment):
 # Choose the translation method
 use_googletrans = True  # Set to False if you want to use the API
 
-# Search for the "jjTasks" folder
-jjtasks_folder = glob.glob(input_directory)
-if len(jjtasks_folder) == 0:
-    print("No jjTasks folder found.")
-    exit()
-
 # Get the list of files in the "jjTasks" folder
-file_list = glob.glob(os.path.join(jjtasks_folder[0], '*.csv'))
+file_list = glob.glob(os.path.join(input_directory, 'raw_output_*.csv'))
 
 # Extract the numeric part of the file names for sorting
 numeric_part = lambda file_name: int(re.search(r'\d+', file_name).group())
@@ -94,10 +97,10 @@ for i, file_path in enumerate(file_list):
     df['Translated_Comment'] = translated_comments
     
     # Modify column names
-    df.rename(columns={'Sentiment_Score (Translated)': 'Sentiment_Score_Trans', 'Sentiment_Score (Original)': 'Sentiment_Score_Orig'}, inplace=True)
+    df.rename(columns={'Sentiment_Score (Translated)': 'score', 'Sentiment_Score (Original)': 'Sentiment_Score_Orig'}, inplace=True)
     
     # Save the DataFrame to a new CSV file in the "jjTasks" folder
-    output_file = os.path.join(jjtasks_folder[0], f"Bert_analysis_{i}.csv")
+    output_file = os.path.join(input_directory, f"Bert_analysis_{i}.csv")
     df.to_csv(output_file, index=False)
     
     # Add the processed file to the list
@@ -116,7 +119,6 @@ for i, file_path in enumerate(file_list):
 print("All files processed.")
 
 # Delete the raw_output_#.csv files
-raw_files = glob.glob(os.path.join(jjtasks_folder[0], 'raw_output_*.csv'))
 for file in raw_files:
     os.remove(file)
 
@@ -124,13 +126,17 @@ for file in raw_files:
 combined_df = pd.concat([pd.read_csv(file) for file in processed_files])
 
 # Modify column names
-combined_df.rename(columns={'Sentiment_Score (Translated)': 'Sentiment_Score_Trans', 'Sentiment_Score (Original)': 'Sentiment_Score_Orig'}, inplace=True)
+combined_df.rename(columns={'Sentiment_Score (Translated)': 'score'}, inplace=True)
 
-combined_output_file = os.path.join(jjtasks_folder[0], 'Final_BERT.csv')
+# Check if the 'Translated_Comment' column exists before dropping it
+if 'Translated_Comment' in combined_df.columns:
+    combined_df.drop(columns='Translated_Comment', inplace=True)
+
+combined_output_file = os.path.join(input_directory, 'Final_BERT.csv')
 combined_df.to_csv(combined_output_file, index=False)
 
 # Delete the old Bert_analysis_#.csv files
-bert_files = glob.glob(os.path.join(jjtasks_folder[0], 'Bert_analysis_*.csv'))
+bert_files = glob.glob(os.path.join(input_directory, 'Bert_analysis_*.csv'))
 for file in bert_files:
     os.remove(file)
 
