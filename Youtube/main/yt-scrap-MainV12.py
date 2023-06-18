@@ -5,7 +5,7 @@ import re
 from datetime import date
 
 # Set the YouTube Data API client
-youtube = build('youtube', 'v3', developerKey='AIzaSyBgLALDG3o7gZhxGKlhZicjgtLb8tZ801g')
+youtube = build('youtube', 'v3', developerKey='KeyHere')
 
 # Video IDs, maximum number of videos, and maximum comments per video
 video_ids = ["ZYiw9BrO8J8", "4qpWzUeV4Rc", "00sgA1rqouI", "HcGkDrDAm08", "GeOJXmhGPcc",
