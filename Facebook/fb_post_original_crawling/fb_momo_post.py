@@ -8,8 +8,8 @@ import csv
 
 # # selenium # #
 # 【零、設置好登入條件】
-FACEBOOK_ID = "pinyukuo1505@gmail.com"
-FACEBOOK_PW = "Tt_0954033969"
+FACEBOOK_ID = " @gmail.com"
+FACEBOOK_PW = " "
 TARGET_URL = "https://www.facebook.com/momofans/"
 
 
