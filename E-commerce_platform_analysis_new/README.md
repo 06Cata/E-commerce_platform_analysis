@@ -11,3 +11,7 @@ Our analysis market is in Taiwan, so we will analyze momo and pchome. At the sam
 主題: 電商平台分析
 
 我們的分析市場在台灣, 因此將會分析momo和pchome.同時會比較蝦皮商家和個人賣家, 以及淘寶和關稅政策, 對一般客戶選擇購買平台帶來的影響
+
+產業分析: https://docs.google.com/document/d/17--tLdvq2oRIwdv31Uz1qeLoKBamjZhLoPBBGPV5RZw/edit
+
+時程: https://docs.google.com/spreadsheets/d/1unktMQzdtxoamAShBXyji-MwwTjrQDhI/edit#gid=2137173062
