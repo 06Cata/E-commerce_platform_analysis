@@ -6,6 +6,7 @@ Theme: E-commerce platform analysis
 
 Our analysis market is in Taiwan, so we will analyze momo and pchome. At the same time, we will compare the impact of Shopee merchants and individual sellers, as well as Taobao and tariff policies, on the general customers' choice of purchasing platforms.
 
+
 首先, 感謝你點進來~ 這是我在轉職班和組員們的第一個商業分析專案
 
 主題: 電商平台分析
