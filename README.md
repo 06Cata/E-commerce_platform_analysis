@@ -18,6 +18,7 @@ Our analysis market is in Taiwan, so we will analyze momo and pchome. At the sam
 時程: https://docs.google.com/spreadsheets/d/1unktMQzdtxoamAShBXyji-MwwTjrQDhI/edit#gid=2137173062
 
 
+--------------------
 
 db:  Facebook / Mobile01 / PTT / Youtube
 
